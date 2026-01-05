@@ -9,3 +9,8 @@ DOI: https://doi.org/10.1016/j.procs.2019.12.189
 ## LEEMANS, S. J. J.; FAHLAND, D.; VAN DER AALST, W. M. P. Directly Follows-Based Process Mining: Exploration & a Case Study. In: INTERNATIONAL CONFERENCE ON PROCESS MINING (ICPM), 2019, Aachen. Proceedings […]. Aachen: IEEE, 2019. p. 25-32.
 
 https://doi.org/10.1109/ICPM.2019.00015
+
+
+## SHAIMOV, A.; et al. DiSHAIMOV, A.; et al. Discovering Directly-Follows Graph Model for Acyclic Processes. arXiv preprint, 2025. scovering Directly-Follows Graph Model for Acyclic Processes. arXiv preprint, 2025. 
+
+https://doi.org/10.48550/arXiv.2502.00499
