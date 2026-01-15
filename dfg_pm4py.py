@@ -4,17 +4,17 @@ from datetime import datetime
 import pm4py
 from pm4py.objects.log.util import dataframe_utils
 from pm4py.objects.conversion.log import converter as log_converter
-# importar função customizada de DFG (caso queira comparar)
+# importar funcao customizada de DFG (caso queira comparar)
 try:
     from dfg_helpdesk import build_directly_follows_graph
 except Exception:
     build_directly_follows_graph = None
 from io import StringIO
 
-# ==================== FUNÇÕES PM4Py ====================
+# ==================== FUNCOES PM4Py ====================
 def create_pm4py_log(df):
     """Cria log no formato PM4Py a partir de DataFrame"""
-    # Renomear colunas para padrão PM4Py
+    # Renomear colunas para padrao PM4Py
     df = df.rename(columns={
         'CaseID': 'case:concept:name',
         'Activity': 'concept:name', 
@@ -31,8 +31,8 @@ def discover_dfg_pm4py(log):
     """Descobre DFG usando PM4Py"""
     from pm4py.algo.discovery.dfg import algorithm as dfg_discovery
     
-    # Descobrir DFG (frequência)
-    # O retorno de dfg_discovery.apply pode variar entre versões do PM4Py
+    # Descobrir DFG (frequencia)
+    # O retorno de dfg_discovery.apply pode variar entre versoes do PM4Py
     # (ex.: retornar 3 ou 4 elementos). Tratamos de forma robusta.
     res = dfg_discovery.apply(log)
     if isinstance(res, tuple) or isinstance(res, list):
@@ -49,7 +49,7 @@ def discover_dfg_pm4py(log):
             start_activities = {}
             end_activities = {}
     else:
-        # se retornou apenas um dicionário
+        # se retornou apenas um dicionario
         dfg_freq = res
         start_activities = {}
         end_activities = {}
@@ -64,19 +64,19 @@ def discover_dfg_pm4py(log):
     return dfg_freq, dfg_perf, start_activities, end_activities
 
 def visualize_dfg_pm4py(dfg_freq, dfg_perf, log):
-    """Visualiza DFG usando visualização nativa do PM4Py"""
+    """Visualiza DFG usando visualizacao nativa do PM4Py"""
     from pm4py.visualization.dfg import visualizer as dfg_visualizer
     
     print("GERANDO VISUALIZACOES COM PM4Py...")
     
-    # Visualização de frequência
-    print("\n1. DFG por Frequência:")
+    # Visualizacao de frequencia
+    print("\n1. DFG por Frequencia:")
     gviz_freq = dfg_visualizer.apply(dfg_freq, 
                                      log=log,
                                      variant=dfg_visualizer.Variants.FREQUENCY)
     dfg_visualizer.view(gviz_freq)
     
-    # Visualização de desempenho
+    # Visualizacao de desempenho
     print("\n2. DFG por Desempenho (tempo):")
     gviz_perf = dfg_visualizer.apply(dfg_perf, 
                                      log=log,
@@ -94,13 +94,13 @@ def discover_process_model_pm4py(log):
     
     print("\nDESCOBRINDO MODELOS DE PROCESSO...")
     
-    # 1. Alpha Miner (básico)
-    print("1. Alpha Miner (clássico):")
+    # 1. Alpha Miner (basico)
+    print("1. Alpha Miner (classico):")
     net_alpha, initial_marking_alpha, final_marking_alpha = alpha_miner.apply(log)
     gviz_alpha = pn_visualizer.apply(net_alpha, initial_marking_alpha, final_marking_alpha)
     pn_visualizer.view(gviz_alpha)
     
-    # 2. Heuristics Miner (robusto a ruídos)
+    # 2. Heuristics Miner (robusto a ruidos)
     print("\n2. Heuristics Miner (robusto):")
     heu_net = heuristics_miner.apply_heu(log)
     from pm4py.visualization.heuristics_net import visualizer as hn_visualizer
@@ -120,7 +120,7 @@ def discover_process_model_pm4py(log):
     }
 
 def analyze_process_stats_pm4py(log, df):
-    """Análise de estatísticas do processo usando PM4Py"""
+    """Analise de estatisticas do processo usando PM4Py"""
     from pm4py.statistics.traces.generic.log import case_statistics
     from pm4py.statistics.start_activities.log import get as start_activities_get
     from pm4py.statistics.end_activities.log import get as end_activities_get
@@ -129,12 +129,12 @@ def analyze_process_stats_pm4py(log, df):
     print("\nESTATISTICAS DO PROCESSO (PM4Py):")
     print("=" * 60)
     
-    # 1. Estatísticas básicas
+    # 1. Estatisticas basicas
     print(f"1. ESTATISTICAS BASICAS:")
     print(f"   - Total de casos: {len(log)}")
     print(f"   - Total de eventos: {sum(len(trace) for trace in log)}")
     
-    # 2. Atividades de início
+    # 2. Atividades de inicio
     start_activities = start_activities_get.get_start_activities(log)
     print(f"\n2. ATIVIDADES DE INICIO:")
     for activity, count in start_activities.items():
@@ -154,9 +154,9 @@ def analyze_process_stats_pm4py(log, df):
     for activity, count in sorted(activities.items(), key=lambda x: x[1], reverse=True)[:5]:
         total_events = sum(activities.values())
         percentage = (count / total_events) * 100
-        print(f"   - {activity}: {count} ocorrências ({percentage:.1f}%)")
+        print(f"   - {activity}: {count} ocorrencias ({percentage:.1f}%)")
     
-    # 5. Duração dos casos
+    # 5. Duracao dos casos
     case_durations = case_statistics.get_all_case_durations(log, 
                                                            parameters={case_statistics.Parameters.TIMESTAMP_KEY: "time:timestamp"})
     if case_durations:
@@ -195,17 +195,17 @@ def discover_variants_pm4py(log):
         except Exception:
             return str(variant)
     
-    print(f"Total de variantes únicas: {len(variants)}")
+    print(f"Total de variantes unicas: {len(variants)}")
     print(f"Total de casos: {len(log)}\n")
     
-    # Mostrar variantes ordenadas por frequência
+    # Mostrar variantes ordenadas por frequencia
     for i, (variant, cases) in enumerate(sorted(variants.items(), 
                                                 key=lambda x: len(x[1]), 
                                                 reverse=True)):
         count = len(cases)
         percentage = (count / len(log)) * 100
         
-        # Simplificar visualização da variante
+        # Simplificar visualizacao da variante
         variant_str = variant_to_str(variant)
         
         print(f"Variante {i+1}: {percentage:.1f}% dos casos ({count} casos)")
@@ -217,7 +217,7 @@ def discover_variants_pm4py(log):
     return variants
 
 def analyze_conformance_pm4py(log):
-    """Análise de conformidade usando PM4Py"""
+    """Analise de conformidade usando PM4Py"""
     from pm4py.algo.discovery.alpha import algorithm as alpha_miner
     from pm4py.algo.conformance.tokenreplay import algorithm as token_replay
     
@@ -230,7 +230,7 @@ def analyze_conformance_pm4py(log):
     # 2. Executar token replay
     replayed_traces = token_replay.apply(log, net, initial_marking, final_marking)
     
-    # 3. Calcular métricas
+    # 3. Calcular metricas
     total_traces = len(replayed_traces)
     fitting_traces = sum(1 for trace in replayed_traces if trace['trace_is_fit'])
     missing_tokens = sum(trace['missing_tokens'] for trace in replayed_traces)
@@ -243,7 +243,7 @@ def analyze_conformance_pm4py(log):
               0.5 * (1 - remaining_tokens/produced_tokens if produced_tokens > 0 else 1)
     
     print(f"1. METRICAS DE CONFORMIDADE:")
-    print(f"   - Fitness: {fitness:.3f} (0-1, onde 1 é perfeito)")
+    print(f"   - Fitness: {fitness:.3f} (0-1, onde 1 eh perfeito)")
     print(f"   - Traces conformes: {fitting_traces}/{total_traces} ({(fitting_traces/total_traces)*100:.1f}%)")
     print(f"   - Tokens faltando: {missing_tokens}")
     print(f"   - Tokens restantes: {remaining_tokens}")
@@ -290,7 +290,7 @@ def analyze_bottlenecks_pm4py(log):
             sojourn_time = None
     else:
         sojourn_time = None
-    # importar workflow_graph se disponível
+    # importar workflow_graph se disponivel
     try:
         import importlib
         spec_wf = importlib.util.find_spec("pm4py.algo.analysis.workflow_graph")
@@ -313,7 +313,7 @@ def analyze_bottlenecks_pm4py(log):
     else:
         sojourn_times = None
 
-    # Se não houver função disponível, calcular tempos manualmente a partir do log
+    # Se nao houver funcao disponivel, calcular tempos manualmente a partir do log
     if sojourn_times is None:
         from collections import defaultdict
         sojourn_times = defaultdict(list)
@@ -350,12 +350,12 @@ def analyze_bottlenecks_pm4py(log):
     else:
         print("   Nenhum bottleneck significativo encontrado!")
     
-    # 2. Análise de fluxo de trabalho
+    # 2. Analise de fluxo de trabalho
     print(f"\n2. ANALISE DE FLUXO DE TRABALHO:")
     if wf_graph is not None:
         try:
             workflow_graph = wf_graph.apply(log)
-            # Aqui poderíamos extrair mais métricas do grafo de workflow
+            # Aqui poderiamos extrair mais metricas do grafo de workflow
             print(f"   - Grafo de workflow gerado com {len(workflow_graph.nodes())} nos")
         except Exception:
             print("   - Analise de workflow falhou ao aplicar o algoritmo")
@@ -387,7 +387,7 @@ def export_results_pm4py(log, dfg_freq, dfg_perf, variants, conformance_results,
     dfg_df.to_csv('pm4py_dfg_analysis.csv', index=False, encoding='utf-8')
     
     # 2. Exportar variantes
-    # Normalizar variantes para string (lida com vários formatos retornados pelo PM4Py)
+    # Normalizar variantes para string (lida com varios formatos retornados pelo PM4Py)
     def variant_to_str_local(variant):
         if isinstance(variant, str):
             return variant
@@ -415,7 +415,7 @@ def export_results_pm4py(log, dfg_freq, dfg_perf, variants, conformance_results,
     variants_df = pd.DataFrame(variants_data)
     variants_df.to_csv('pm4py_variants.csv', index=False, encoding='utf-8')
     
-    # 3. Exportar métricas de conformidade
+    # 3. Exportar metricas de conformidade
     conformance_data = {
         'fitness': conformance_results['fitness'],
         'fitting_traces': conformance_results['fitting_traces'],
@@ -437,9 +437,9 @@ def export_results_pm4py(log, dfg_freq, dfg_perf, variants, conformance_results,
     print(f"   - pm4py_conformance.json: metricas de conformidade")
     print(f"   - pm4py_bottlenecks.csv: {len(bottlenecks_df)} bottlenecks")
 
-# ==================== FUNÇÃO PRINCIPAL PM4Py ====================
+# ==================== FUNCAO PRINCIPAL PM4Py ====================
 def main_pm4py():
-    """Função principal usando PM4Py"""
+    """Funcao principal usando PM4Py"""
     
     print("PROCESS MINING COM PM4Py")
     print("=" * 60)
@@ -498,13 +498,13 @@ def main_pm4py():
     print("3. Visualizando DFG...")
     gviz_freq, gviz_perf = visualize_dfg_pm4py(dfg_freq, dfg_perf, log)
     
-    # 5. Estatísticas do processo
+    # 5. Estatisticas do processo
     analyze_process_stats_pm4py(log, df_formatted)
     
     # 6. Descobrir variantes
     variants = discover_variants_pm4py(log)
     
-    # 7. Análise de conformidade
+    # 7. Analise de conformidade
     conformance_results = analyze_conformance_pm4py(log)
     
     # 8. Identificar bottlenecks
@@ -520,9 +520,9 @@ def main_pm4py():
     print("ANALISE COM PM4Py CONCLUIDA!")
     print("=" * 60)
 
-# ==================== FUNÇÃO DE COMPARAÇÃO ====================
+# ==================== FUNCAO DE COMPARACAO ====================
 def compare_pm4py_vs_custom():
-    """Compara resultados PM4Py vs implementação customizada"""
+    """Compara resultados PM4Py vs implementacao customizada"""
     
     print("COMPARACAO: PM4Py vs IMPLEMENTACAO CUSTOMIZADA")
     print("=" * 60)
@@ -560,7 +560,7 @@ def compare_pm4py_vs_custom():
     # Comparar
     print("\nCOMPARACAO:")
     
-    # Converter para conjuntos para comparação
+    # Converter para conjuntos para comparacao
     pm4py_set = set(dfg_freq_pm4py.keys())
     custom_set = set(dfg_custom.keys())
     
@@ -579,13 +579,13 @@ def compare_pm4py_vs_custom():
     
     print("=" * 60)
 
-# ==================== EXECUÇÃO ====================
+# ==================== EXECUCAO ====================
 if __name__ == "__main__":
     import sys
     
-    print("Selecione a opção:")
-    print("1. Análise completa com PM4Py")
-    print("2. Comparação PM4Py vs Custom")
+    print("Selecione a opcao:")
+    print("1. Analise completa com PM4Py")
+    print("2. Comparacao PM4Py vs Custom")
     print("3. Sair")
     
     choice = input("\nDigite sua escolha (1-3): ")
@@ -597,4 +597,4 @@ if __name__ == "__main__":
     elif choice == "3":
         sys.exit()
     else:
-        print("Opção inválida!")
+        print("Opcao invalida!")
